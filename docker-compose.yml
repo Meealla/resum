@@ -1,39 +1,53 @@
-
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: mongo-container
+  postgres:
+    image: postgres:15
+    container_name: postgres
     environment:
-      MONGO_INITDB_DATABASE: ResumeGenerator
+      POSTGRES_DB: test_db
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     ports:
-      - "27017:27017"  # MongoDB будет доступен на порту 27017
-    volumes:
-      - mongo-data:/data/db
+      - "5434:5432"
     networks:
       - app-network
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      retries: 5
-      start_period: 10s
-      timeout: 10s
 
-  app:
-    build: .
-    container_name: spring-boot-app
-    environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/ResumeGenerator  # Используем имя контейнера mongodb для подключения
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
     ports:
-      - "8082:8082"  # Приложение будет доступно на порту 8082
+      - "27018:27017"
+    networks:
+      - app-network
+
+  resume-analyzer:
+    build:
+      context: ./resume-analyzer
+    container_name: resume-analyzer
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/test_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  resume-generator:
+    build:
+      context: ./resume-generator
+    container_name: resume-generator
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/test_db
     depends_on:
       - mongodb
     networks:
       - app-network
-
-volumes:
-  mongo-data:
 
 networks:
   app-network:
