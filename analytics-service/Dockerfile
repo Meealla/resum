@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy the application source code (assuming it's built elsewhere)
 COPY . .
 
-# Expose the port for the API Gateway
+# Expose the port
 EXPOSE 8084
 
 # Command to run the application (adjust if necessary, e.g., if using Spring Boot with JAR file)
