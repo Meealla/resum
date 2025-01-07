@@ -14,63 +14,62 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import webapp.resumeanalyzer.domain.model.Hobby;
-import webapp.resumeanalyzer.domain.service.HobbyService;
+import webapp.resumeanalyzer.domain.model.Experience;
+import webapp.resumeanalyzer.domain.service.ExperienceService;
 
 /**
- * Тестовый класс для проверки функциональности Hobby.
+ * Тестовый класс для проверки функциональности Experience.
  */
 @RestController
-@RequestMapping("/hobbies")
-public class HobbyTestController {
+@RequestMapping("/experiences")
+public class ExperienceTestController {
 
     //сервис для выполнения бизнес-логики
-    private final HobbyService hobbyService;
+    private final ExperienceService experienceService;
 
     //конструктор для внедрения зависимости
     @Autowired
-    public HobbyTestController(HobbyService hobbyService) {
-        this.hobbyService = hobbyService;
+    public ExperienceTestController(ExperienceService experienceService) {
+        this.experienceService = experienceService;
     }
 
     //метод для получения сущности по id
     @GetMapping("/{id}")
-    public ResponseEntity<Hobby> getHobby(@PathVariable String id) {
-        Hobby hobby = hobbyService.getHobbyById(id);
-        if (hobby == null) {
+    public ResponseEntity<Experience> getExperience(@PathVariable String id) {
+        Experience experience = experienceService.getExperienceById(id);
+        if (experience == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(hobby);
+        return ResponseEntity.ok(experience);
     }
 
     //метод для получения сущностей по слову-фильтру
     @GetMapping("/load")
-    public List<Hobby> loadHobbyByNameFilter(@RequestParam String nameFilter) {
-        return hobbyService.loadHobbyByNameFilter(nameFilter);
+    public List<Experience> loadExperienceByNameFilter(@RequestParam String nameFilter) {
+        return experienceService.loadExperienceByNameFilter(nameFilter);
     }
 
     //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Hobby> createHobby(@Valid @RequestBody Hobby hobby) {
-        Hobby savedHobby = hobbyService.createHobby(hobby);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedHobby);
+    public ResponseEntity<Experience> createExperience(@Valid @RequestBody Experience experience) {
+        Experience savedExperience = experienceService.createExperience(experience);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedExperience);
     }
 
     //метод удаления сущности по id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Hobby> deleteHobby(@PathVariable String id) {
-        hobbyService.deleteHobby(id);
+    public ResponseEntity<Experience> deleteExperience(@PathVariable String id) {
+        experienceService.deleteExperience(id);
         return ResponseEntity.noContent().build();
     }
 
     //метод обновления сущности
     @PutMapping
-    public ResponseEntity<Hobby> updateHobby(@PathVariable String id,
-            @Valid @RequestBody Hobby hobby) {
-                                             @Valid @RequestBody Hobby hobby) {
+    public ResponseEntity<Experience> updateExperience(@PathVariable String id,
+            @Valid @RequestBody Experience experience) {
         try {
-            hobbyService.updateHobby(id, hobby);
-            return ResponseEntity.ok(hobby);
+            experienceService.updateExperience(id, experience);
+            return ResponseEntity.ok(experience);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

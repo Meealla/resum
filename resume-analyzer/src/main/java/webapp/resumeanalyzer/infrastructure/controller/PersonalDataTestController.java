@@ -14,63 +14,63 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import webapp.resumeanalyzer.domain.model.Hobby;
-import webapp.resumeanalyzer.domain.service.HobbyService;
+import webapp.resumeanalyzer.domain.model.PersonalData;
+import webapp.resumeanalyzer.domain.service.PersonalDataService;
 
 /**
- * Тестовый класс для проверки функциональности Hobby.
+ * Тестовый класс для проверки функциональности PersonalData.
  */
 @RestController
-@RequestMapping("/hobbies")
-public class HobbyTestController {
+@RequestMapping("/personalData")
+public class PersonalDataTestController {
 
     //сервис для выполнения бизнес-логики
-    private final HobbyService hobbyService;
+    private final PersonalDataService personalDataService;
 
     //конструктор для внедрения зависимости
     @Autowired
-    public HobbyTestController(HobbyService hobbyService) {
-        this.hobbyService = hobbyService;
+    public PersonalDataTestController(PersonalDataService personalDataService) {
+        this.personalDataService = personalDataService;
     }
 
     //метод для получения сущности по id
     @GetMapping("/{id}")
-    public ResponseEntity<Hobby> getHobby(@PathVariable String id) {
-        Hobby hobby = hobbyService.getHobbyById(id);
-        if (hobby == null) {
+    public ResponseEntity<PersonalData> getPersonalData(@PathVariable String id) {
+        PersonalData personalData = personalDataService.getPersonalDataById(id);
+        if (personalData == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(hobby);
+        return ResponseEntity.ok(personalData);
     }
 
     //метод для получения сущностей по слову-фильтру
     @GetMapping("/load")
-    public List<Hobby> loadHobbyByNameFilter(@RequestParam String nameFilter) {
-        return hobbyService.loadHobbyByNameFilter(nameFilter);
+    public List<PersonalData> loadPersonalDataByNameFilter(@RequestParam String nameFilter) {
+        return personalDataService.loadPersonalDataByNameFilter(nameFilter);
     }
 
     //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Hobby> createHobby(@Valid @RequestBody Hobby hobby) {
-        Hobby savedHobby = hobbyService.createHobby(hobby);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedHobby);
+    public ResponseEntity<PersonalData> createPersonalData(
+            @Valid @RequestBody PersonalData personalData) {
+        PersonalData savedPersonalData = personalDataService.createPersonalData(personalData);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPersonalData);
     }
 
     //метод удаления сущности по id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Hobby> deleteHobby(@PathVariable String id) {
-        hobbyService.deleteHobby(id);
+    public ResponseEntity<PersonalData> deletePersonalData(@PathVariable String id) {
+        personalDataService.deletePersonalData(id);
         return ResponseEntity.noContent().build();
     }
 
     //метод обновления сущности
     @PutMapping
-    public ResponseEntity<Hobby> updateHobby(@PathVariable String id,
-            @Valid @RequestBody Hobby hobby) {
-                                             @Valid @RequestBody Hobby hobby) {
+    public ResponseEntity<PersonalData> updatePersonalData(@PathVariable String id,
+            @Valid @RequestBody PersonalData personalData) {
         try {
-            hobbyService.updateHobby(id, hobby);
-            return ResponseEntity.ok(hobby);
+            personalDataService.updatePersonalData(id, personalData);
+            return ResponseEntity.ok(personalData);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
