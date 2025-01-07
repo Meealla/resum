@@ -1,28 +1,58 @@
-package org.example.analyticsmessage;
+package org.example.analyticsmessage.domain.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
 
+/**
+ * Класс-модель для сбора аналитики об HTTP-запросах
+ * и передачи через брокер сообщений Kafka
+ */
 @Getter
 @Setter
 public class MessageDTO {
 
+    /**
+     * Уникальный идентификатор сообщения
+     */
     private Long id;
 
+    /**
+     * Метод HTTP-запроса
+     */
     private String method;
 
+    /**
+     * URL HTTP-запроса
+     */
     private String url;
 
+    /**
+     * Код ответа
+     */
     private int code;
 
+    /**
+     * IP-адрес клиента
+     */
     private String ip;
 
+    /**
+     * Время выполнения запроса
+     */
     private int time;
 
     public MessageDTO() {}
 
+    /**
+     * Конструктор с параметрами
+     * @param method метод запроса
+     * @param url URL запроса
+     * @param code код ответа
+     * @param ip ip-адрес клиента
+     * @param time время выполнения запроса
+     */
     public MessageDTO(String method, String url, int code, String ip, int time) {
         this.method = method;
         this.url = url;
