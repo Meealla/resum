@@ -66,7 +66,7 @@ public class HobbyTestController {
     //метод обновления сущности
     @PutMapping
     public ResponseEntity<Hobby> updateHobby(@PathVariable String id,
-            @Valid @RequestBody Hobby hobby) {
+                                             @Valid @RequestBody Hobby hobby) {
         try {
             hobbyService.updateHobby(id, hobby);
             return ResponseEntity.ok(hobby);
