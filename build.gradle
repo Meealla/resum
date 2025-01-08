@@ -1,3 +1,5 @@
+
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
@@ -47,8 +49,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
     // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
     implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.27'
-    }
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.8.1'
+}
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
