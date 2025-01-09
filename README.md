@@ -98,3 +98,9 @@ KAFKA_BROKER=localhost:9092
    ```
 2. **Покрытие кода:**
     - Отчёты доступны в каталоге `build/reports/tests`.
+
+Порты:
+analytics-service: 8084
+api-gateway: 8765
+resume-analyzer: 8083
+resume-generator: 8082

@@ -15,4 +15,4 @@ RUN chmod +x gradlew && ./gradlew build
 EXPOSE 8082
 
 # Command to run the application
-CMD ["java", "-jar", "build/libs/resume-analyzer-backend1-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "build/libs/resume-generator-0.0.1-SNAPSHOT.jar"]
