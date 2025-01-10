@@ -66,7 +66,7 @@ public class Template implements Serializable {
      */
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime createdAt;
+    private LocalDateTime date;
 
     /**
      * Версия шаблона.
@@ -85,7 +85,7 @@ public class Template implements Serializable {
      */
     public Template(String name, String description, String content) {
         this.id = UUID.randomUUID();
-        this.createdAt = LocalDateTime.now();
+        this.date = LocalDateTime.now();
         this.name = name;
         this.description = description;
         this.content = content;
