@@ -1,5 +1,8 @@
 package webapp.resumegenerator.domain.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.resumegenerator.domain.model.BlockElement;
@@ -33,6 +36,7 @@ public class BlockElementService {
 
     // Обновление существующего блока
     @Transactional
+    @CachePut(value = "blockElements", key = "#updatedBlock.id")
     public BlockElement updateBlock(UUID id, BlockElement updatedBlock) {
         BlockElement existingBlock = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Block with ID '" + id + "' not found"));
@@ -52,6 +56,7 @@ public class BlockElementService {
 
     // Удаление блока
     @Transactional
+    @CacheEvict(value = "blockElements", key = "#id")
     public void deleteBlock(UUID id) {
         BlockElement blockElement = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Block with ID '" + id + "' not found"));
@@ -60,6 +65,7 @@ public class BlockElementService {
     }
 
     // Получение всех блоков
+    @Cacheable(value = "blockElements")
     public List<BlockElement> getAllBlocks() {
         return repository.findAll();
     }
@@ -70,6 +76,7 @@ public class BlockElementService {
     }
 
     // Получение блока по ID
+    @Cacheable(value = "blockElements", key = "#id")
     public Optional<BlockElement> getBlockById(UUID id) {
         return repository.findById(id);
     }

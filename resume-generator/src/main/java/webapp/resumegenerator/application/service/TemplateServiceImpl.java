@@ -1,5 +1,8 @@
 package webapp.resumegenerator.application.service;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import webapp.resumegenerator.domain.model.Template;
@@ -35,6 +38,7 @@ public class TemplateServiceImpl implements TemplateService {
      * @return Список всех шаблонов
      */
     @Override
+    @Cacheable(value = "templates")
     public List<Template> getAllTemplates() {
         return templateRepository.findAll();
     }
@@ -48,6 +52,7 @@ public class TemplateServiceImpl implements TemplateService {
      * @throws RuntimeException возникает исключение, если шаблон не найден.
      */
     @Override
+    @Cacheable(value = "templates", key = "#id")
     public Template getTemplateById(String id) {
         UUID uuid = generateUUID(id);
         return templateRepository.findById(uuid)
@@ -73,6 +78,7 @@ public class TemplateServiceImpl implements TemplateService {
      * @throws RuntimeException возникает исключение, если шаблон не нацден.
      */
     @Override
+    @CachePut(value = "templates", key = "#template.id")
     public void updateTemplate(String id, Template template) {
         UUID uuid = generateUUID(id);
         if (!templateRepository.existsById(uuid)) {
@@ -89,6 +95,7 @@ public class TemplateServiceImpl implements TemplateService {
      * @throws RuntimeException возникает исключение, если шаблон не найден.
      */
     @Override
+    @CacheEvict(value = "templates", key = "#id")
     public void deleteTemplate(String id) {
         UUID uuid = generateUUID(id);
         if (!templateRepository.existsById(uuid)) {
