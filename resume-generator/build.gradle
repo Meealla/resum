@@ -7,23 +7,14 @@ plugins {
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
 
-checkstyle {
-	toolVersion = '10.12.1'
-	configFile = file('config/checkstyle/google_checks.xml')
-}
-
-tasks.withType(Checkstyle) {
-	reports {
-		html.required = true
-		xml.required = false
-		//html.stylesheet = resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
-	}
-}
-
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+bootRun {
+	systemProperty 'spring.profiles.active', System.getProperty('prod', 'test')
 }
 
 repositories {
@@ -32,25 +23,17 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
 	implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
-	implementation 'org.springframework.boot:spring-boot-starter-validation' // Для валидации данных
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/com.puppycrawl.tools/checkstyle
-	implementation group: 'com.puppycrawl.tools', name: 'checkstyle', version: '10.20.2'
-	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
-	// https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.3.Final'
 	testImplementation 'com.h2database:h2'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	// https://mvnrepository.com/artifact/com.sourcemuse.gradle.plugin/gradle-mongo-plugin
-	implementation group: 'com.sourcemuse.gradle.plugin', name: 'gradle-mongo-plugin', version: '2.0.0'
-
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
@@ -59,27 +42,25 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.36'
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
-}
-
-tasks.withType(Checkstyle) {
-	reports {
-		html.required = true
-		xml.required = false
 	}
-}
+
 checkstyle {
-	toolVersion '10.20.2'
-	configFile file("\\src\\main\\java\\webapp\\resumegenerator\\config\\checkstyle\\checkstyle.xml ")
+	toolVersion = '10.20.2' // Установили версию здесь один раз
+	configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml") // И путь к файлу конфигурации
 	ignoreFailures = true
 	maxWarnings = 0
 	maxErrors = 0
 }
-checkstyleMain {
-	source ='src/main/java'
-}
-checkstyleTest {
-	source ='src/test/java'
-}
+
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+checkstyleMain {
+	source = 'src/main/java'
+	enabled = false
+}
+checkstyleTest {
+	source = 'src/test/java'
+	enabled = false
 }

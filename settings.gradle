@@ -3,3 +3,5 @@ includeBuild 'resume-analyzer'
 includeBuild 'resume-generator'
 includeBuild 'analytic-service'
 includeBuild 'analytics-message'
+includeBuild 'api-gateway'
+
