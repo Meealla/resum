@@ -24,32 +24,23 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
-	implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
-	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.3.Final'
+	implementation 'org.postgresql:postgresql:42.7.4'
+	implementation 'org.hibernate.orm:hibernate-core:6.6.3.Final'
 	testImplementation 'com.h2database:h2'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'org.projectlombok:lombok:1.18.36'
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
-	implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.27'
-	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.8.1'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
 }
 
 checkstyle {
-	toolVersion = '10.20.2' // Установили версию здесь один раз
-	configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml") // И путь к файлу конфигурации
+	toolVersion = '10.20.2'
+	configFile = file("${project.rootDir}/config/checkstyle/checkstyle.xml")
 	ignoreFailures = true
 	maxWarnings = 0
 	maxErrors = 0
