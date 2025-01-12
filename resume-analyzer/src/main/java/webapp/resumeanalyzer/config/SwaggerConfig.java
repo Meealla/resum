@@ -1,4 +1,4 @@
-package webapp.resumegenerator.config;
+package webapp.resumeanalyzer.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,9 +14,9 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Generator API")
+                        .title("Analyzer API")
                         .version("1.0")
-                        .description("Описание API генератора резюме"));
+                        .description("Описание API анализатора резюме"));
     }
     @Bean
     public ObjectMapper objectMapper() {
