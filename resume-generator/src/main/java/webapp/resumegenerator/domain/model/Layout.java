@@ -3,6 +3,7 @@ package webapp.resumegenerator.domain.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.ElementCollection;
+import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
  */
 @Document(collection = "layouts") // Указывает, что класс представляет коллекцию в MongoDB
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Layout {
+public class Layout implements Serializable {
 
     @Id
     private UUID id; // MongoDB использует это поле как уникальный идентификатор

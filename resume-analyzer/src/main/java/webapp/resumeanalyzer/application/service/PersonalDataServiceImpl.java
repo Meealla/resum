@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.PersonalData;
 import webapp.resumeanalyzer.domain.repository.PersonalDataRepository;
@@ -37,6 +40,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
 
     @Transactional
     @Override
+    @CachePut(value = "personalData", key = "#personalData.id")
     public PersonalData updatePersonalData(String id, PersonalData personalData) {
         UUID uuid = generateUuid(id);
         personalData.setId(uuid);
@@ -49,6 +53,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "personalData", key = "#id")
     public void deletePersonalData(String id) {
         UUID uuid = generateUuid(id);
         personalDataRepository.deleteById(uuid);
@@ -65,6 +70,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     }
 
     @Override
+    @Cacheable(value = "personalData", key = "#id")
     public PersonalData getPersonalDataById(String id) {
         UUID uuid = generateUuid(id);
         return personalDataRepository.findById(uuid).orElseThrow(
