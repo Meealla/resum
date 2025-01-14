@@ -37,6 +37,8 @@ services:
     image: bitnami/zookeeper:latest
     ports:
       - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
@@ -80,9 +82,9 @@ services:
     networks:
       - app-network
 
-  analytics-service:
+  analytic-service:
     build:
-      context: ./analytics-service
+      context: ./analytic-service
       dockerfile: Dockerfile
     ports:
       - "8084:8084"
@@ -100,7 +102,7 @@ services:
     ports:
       - "8765:8765"
     depends_on:
-      - analytics-service
+      - analytic-service
 
 networks:
   app-network:
