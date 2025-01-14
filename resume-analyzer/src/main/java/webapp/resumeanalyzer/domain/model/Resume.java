@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Resume {
+public class Resume implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

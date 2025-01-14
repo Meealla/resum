@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Experience;
 import webapp.resumeanalyzer.domain.repository.ExperienceRepository;
@@ -40,6 +43,7 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Transactional
     @Override
+    @CachePut(value = "experiences", key = "#experience.id")
     public Experience updateExperience(String id, Experience experience) {
         UUID uuid = generateUuid(id);
         experience.setId(uuid);
@@ -55,6 +59,7 @@ public class ExperienceServiceImpl implements ExperienceService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "experiences", key = "#id")
     public void deleteExperience(String id) {
         UUID uuid = generateUuid(id);
         experienceRepository.deleteById(uuid);
@@ -70,6 +75,7 @@ public class ExperienceServiceImpl implements ExperienceService {
     }
 
     @Override
+    @Cacheable(value = "experiences", key = "#id")
     public Experience getExperienceById(String id) {
         UUID uuid = generateUuid(id);
         return experienceRepository.findById(uuid).orElseThrow(

@@ -1,5 +1,13 @@
 package webapp.resumegenerator.infrastructure.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import webapp.resumegenerator.domain.service.TemplateService;
 import webapp.resumegenerator.domain.model.Template;
@@ -59,10 +67,21 @@ public class TemplateController {
      * @param size Количество элементов на странице.
      * @return {@link ResponseEntity} с HTTP статусом 200 (OK) и страницей шаблонов.
      */
+    @Operation(summary = "Получить список шаблонов с пагинацией",
+            description = "Возвращает страницу с шаблонами резюме.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешный ответ", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры запроса")
+    })
     @GetMapping
     public Page<Template> getTemplates(
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size) {
+            @Parameter(description = "Номер страницы", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Количество элементов на странице", example = "10")
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return templateService.getAllTemplates(pageable);
     }
@@ -73,8 +92,18 @@ public class TemplateController {
      * @param id Уникальный идентификатор.
      * @return {@link ResponseEntity} с HTTP статусом 200 (OK) и шаблоном, или 404 (Not Found), если шаблон не найден
      */
+    @Operation(summary = "Получить шаблон по ID", description = "Возвращает шаблон резюме по его идентификатору.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Шаблон найден", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Template.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Шаблон не найден")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<Template> getTemplateById(@PathVariable String id) {
+    public ResponseEntity<Template> getTemplateById(
+            @Parameter(description = "Идентификатор шаблона", example = "12345")
+            @PathVariable String id) {
         Template template = templateService.getTemplateById(id);
         if (template == null) {
             return ResponseEntity.notFound().build();
@@ -88,8 +117,18 @@ public class TemplateController {
      * @param template объект {@link Template}, содержащий данные для создания.
      * @return {@link ResponseEntity} с HTTP статусом 201 (Created) и созданным шаблоном.
      */
+    @Operation(summary = "Создать новый шаблон", description = "Создает новый шаблон резюме.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Шаблон успешно создан", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Template.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Ошибка валидации")
+    })
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Template> createTemplate(@Valid @RequestBody Template template) {
+    public ResponseEntity<Template> createTemplate(
+            @Parameter(description = "Данные нового шаблона")
+            @Valid @RequestBody Template template) {
         Template savedTemplate = templateService.createTemplate(template);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTemplate);
     }
@@ -100,8 +139,15 @@ public class TemplateController {
      * @param id Уникальный идентификатор шаблона.
      * @return {@link ResponseEntity} с HTTP статусом 204 (No Content), если удаление успешно.
      */
+    @Operation(summary = "Удалить шаблон", description = "Удаляет шаблон резюме по идентификатору.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Шаблон успешно удалён"),
+            @ApiResponse(responseCode = "404", description = "Шаблон не найден")
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Template> deleteTemplate(@PathVariable String id) {
+    public ResponseEntity<Template> deleteTemplate(
+            @Parameter(description = "Идентификатор шаблона", example = "12345")
+            @PathVariable String id) {
         templateService.deleteTemplate(id);
         return ResponseEntity.noContent().build();
     }
@@ -114,9 +160,20 @@ public class TemplateController {
      * @param template Обновленный шаблон.
      * @return Обновленный шаблон.
      */
+    @Operation(summary = "Обновить шаблон", description = "Обновляет существующий шаблон резюме.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Шаблон успешно обновлен", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Template.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Неверные данные")
+    })
     @PutMapping(("/{id}"))
-    public ResponseEntity<Template> updateTemplate(@PathVariable String id,
-                                                   @Valid @RequestBody Template template) {
+    public ResponseEntity<Template> updateTemplate(
+            @Parameter(description = "Идентификатор обновляемого шаблона", example = "12345")
+            @PathVariable String id,
+            @Parameter(description = "Данные обновляемого шаблона")
+            @Valid @RequestBody Template template) {
         try {
             templateService.updateTemplate(id, template);
             return ResponseEntity.ok(template);
@@ -133,9 +190,23 @@ public class TemplateController {
      * @param endDate Конечная дата диапазона.
      * @return Список шаблонов за указанный период.
      */
+    @Operation(
+            summary = "Получить шаблоны за указанный период",
+            description = "Возвращает список шаблонов, созданных в заданном диапазоне дат."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешный ответ", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = List.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Неверный формат даты")
+    })
     @GetMapping("/data")
-    public List<Template> getTemplateData(@RequestParam String startDate,
-                                        @RequestParam String endDate) {
+    public List<Template> getTemplateData(
+            @Parameter(description = "Начальная дата диапазона в формате YYYY-MM-DD", example = "2023-01-01")
+            @RequestParam String startDate,
+            @Parameter(description = "Конечная дата диапазона в формате YYYY-MM-DD", example = "2023-12-31")
+            @RequestParam String endDate) {
         LocalDate start = LocalDate.parse(startDate);
         LocalDate end = LocalDate.parse(endDate);
         return templateService.getTemplatesByDateRange(start, end);
@@ -147,8 +218,21 @@ public class TemplateController {
      * @param name Имя шаблона.
      * @return Статус 200, если существует, 404 если нет.
      */
+    @Operation(
+            summary = "Проверить существование шаблона по имени",
+            description = "Возвращает `true`, если шаблон с указанным именем существует, иначе `false`."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Успешный ответ", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Некорректный запрос")
+    })
     @GetMapping("/exists")
-    public ResponseEntity<Boolean> existsTemplateName(@RequestParam String name) {
+    public ResponseEntity<Boolean> existsTemplateName(
+            @Parameter(description = "Имя шаблона", example = "MyTemplate")
+            @RequestParam String name) {
         boolean exists = templateService.isTemplateNameExist(name);
         return ResponseEntity.ok(exists);
     }
@@ -159,8 +243,21 @@ public class TemplateController {
      * @param id Id шаблона.
      * @return {@link ResponseEntity} с HTTP статусом 201 (Created) и созданной новой версией шаблона.
      */
+    @Operation(
+            summary = "Создать новую версию шаблона",
+            description = "Создаёт новую версию существующего шаблона."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Новая версия успешно создана", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Template.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Шаблон с указанным ID не найден")
+    })
     @PostMapping("/{id}/version")
-    public ResponseEntity<Template> createNewTemplateVersion(@PathVariable String id) {
+    public ResponseEntity<Template> createNewTemplateVersion(
+            @Parameter(description = "Идентификатор шаблона", example = "12345")
+            @PathVariable String id) {
         Template template = templateService.getTemplateById(id);
         ResponseEntity<Template> response;
         if (template == null) {
@@ -178,8 +275,21 @@ public class TemplateController {
      * @param id Id шаблона.
      * @return {@link ResponseEntity} с HTTP статусом 200 и списком всех версий шаблона.
      */
+    @Operation(
+            summary = "Получить все версии шаблона",
+            description = "Возвращает список всех версий шаблона по его идентификатору."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Список версий успешно получен", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = List.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Шаблон с указанным ID не найден")
+    })
     @GetMapping("/{id}/versions")
-    public ResponseEntity<List<Template>> getTemplateVersions(@PathVariable String id) {
+    public ResponseEntity<List<Template>> getTemplateVersions(
+            @Parameter(description = "Идентификатор шаблона", example = "12345")
+            @PathVariable String id) {
         Template template = templateService.getTemplateById(id);
         if (template == null) {
             return ResponseEntity.notFound().build();
@@ -194,8 +304,20 @@ public class TemplateController {
      * @param ex Содержит ошибки валидации.
      * @return {@link ResponseEntity} с картой ошибок (поле - сообщение).
      */
+    @Operation(
+            summary = "Обработка ошибок валидации",
+            description = "Возвращает карту ошибок с указанием полей и сообщений об ошибках."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "Ошибки валидации", content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Map.class))
+            })
+    })
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(
+            @Parameter(description = "Исключение валидации")
+            MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
