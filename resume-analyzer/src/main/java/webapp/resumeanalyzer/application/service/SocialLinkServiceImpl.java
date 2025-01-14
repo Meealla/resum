@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.SocialLink;
 import webapp.resumeanalyzer.domain.repository.SocialLinkRepository;
@@ -37,6 +40,7 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Transactional
     @Override
+    @CachePut(value = "socialLinks", key = "#socialLink.id")
     public SocialLink updateSocialLink(String id, SocialLink socialLink) {
         UUID uuid = generateUuid(id);
         socialLink.setId(uuid);
@@ -49,6 +53,7 @@ public class SocialLinkServiceImpl implements SocialLinkService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "socialLinks", key = "#id")
     public void deleteSocialLink(String id) {
         UUID uuid = generateUuid(id);
         socialLinkRepository.deleteById(uuid);
@@ -64,6 +69,7 @@ public class SocialLinkServiceImpl implements SocialLinkService {
     }
 
     @Override
+    @Cacheable(value = "socialLinks", key = "#id")
     public SocialLink getSocialLink(String id) {
         UUID uuid = generateUuid(id);
         return socialLinkRepository.findById(uuid).orElseThrow(

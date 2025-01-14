@@ -104,3 +104,12 @@ analytics-service: 8084
 api-gateway: 8765
 resume-analyzer: 8083
 resume-generator: 8082
+redis: 6379
+
+2. **Запуск консоли Redis для мониторинга:**
+   ```bash
+   docker exec -it redis-container redis-cli //название контейнера redis-container
+   AUTH <password> //по-умолчанию пароль "root", поэтому команда: AUTH root
+   MONITOR
+   ```
+

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Hobby;
 import webapp.resumeanalyzer.domain.repository.HobbyRepository;
@@ -38,6 +41,7 @@ public class HobbyServiceImpl implements HobbyService {
 
     @Transactional
     @Override
+    @CachePut(value = "hobbies", key = "#hobby.id")
     public Hobby updateHobby(String id, Hobby hobby) {
         UUID uuid = generateUuid(id);
         hobby.setId(uuid);
@@ -50,6 +54,7 @@ public class HobbyServiceImpl implements HobbyService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "hobbies", key = "#id")
     public void deleteHobby(String id) {
         UUID uuid = generateUuid(id);
         hobbyRepository.deleteById(uuid);
@@ -65,6 +70,7 @@ public class HobbyServiceImpl implements HobbyService {
     }
 
     @Override
+    @Cacheable(value = "hobbies", key = "#id")
     public Hobby getHobbyById(String id) {
         UUID uuid = generateUuid(id);
         return hobbyRepository.findById(uuid).orElseThrow(

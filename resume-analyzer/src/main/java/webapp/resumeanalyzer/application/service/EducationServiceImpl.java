@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Education;
 import webapp.resumeanalyzer.domain.repository.EducationRepository;
@@ -41,6 +44,7 @@ public class EducationServiceImpl implements EducationService {
 
     @Transactional
     @Override
+    @CachePut(value = "educations", key = "#education.id")
     public Education updateEducation(String id, Education education) {
         UUID uuid = generateUuid(id);
         education.setId(uuid);
@@ -56,6 +60,7 @@ public class EducationServiceImpl implements EducationService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "educations", key = "#id")
     public void deleteEducation(String id) {
         UUID uuid = generateUuid(id);
         educationRepository.deleteById(uuid);
@@ -71,6 +76,7 @@ public class EducationServiceImpl implements EducationService {
     }
 
     @Override
+    @Cacheable(value = "educations", key = "#id")
     public Education getEducationById(String id) {
         UUID uuid = generateUuid(id);
         return educationRepository.findById(uuid).orElseThrow(

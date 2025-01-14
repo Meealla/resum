@@ -2,6 +2,7 @@ package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @SuppressWarnings("checkstyle:SummaryJavadoc")
 @Document(collection = "block_elements")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BlockElement {
+public class BlockElement implements Serializable {
 
     @Id
     private UUID id;

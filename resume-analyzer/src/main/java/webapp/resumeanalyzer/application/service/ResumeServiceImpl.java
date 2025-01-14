@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.repository.ResumeRepository;
@@ -39,6 +42,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Transactional
     @Override
+    @CachePut(value = "resumes", key = "#resume.id")
     public Resume updateResume(String id, Resume resume) {
         UUID uuid = generateUuid(id);
         resume.setId(uuid);
@@ -51,6 +55,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "resumes", key = "#id")
     public void deleteResume(String id) {
         UUID uuid = generateUuid(id);
         resumeRepository.deleteById(uuid);
@@ -66,6 +71,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
+    @Cacheable(value = "resumes", key = "#id")
     public Resume getResumeById(String id) {
         UUID uuid = generateUuid(id);
         return resumeRepository.findById(uuid).orElseThrow(
