@@ -259,11 +259,14 @@ public class TemplateController {
             @Parameter(description = "Идентификатор шаблона", example = "12345")
             @PathVariable String id) {
         Template template = templateService.getTemplateById(id);
+        ResponseEntity<Template> response;
         if (template == null) {
-            return ResponseEntity.notFound().build();
+            response = ResponseEntity.notFound().build();
+        } else {
+            Template newTemplate = templateService.createNewTemplateVersion(template);
+            response = ResponseEntity.status(HttpStatus.CREATED).body(newTemplate);
         }
-        Template newTemplate = templateService.createNewTemplateVersion(template);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newTemplate);
+        return response;
     }
 
     /**
