@@ -113,3 +113,6 @@ redis: 6379
    MONITOR
    ```
 
+
+Swagger  для resume-generator доступен по адресу: http://localhost:8082/swagger-ui/index.html
+Swagger  для resume-analyzer доступен по адресу: http://localhost:8083/swagger-ui/index.html

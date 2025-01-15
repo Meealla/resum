@@ -1,0 +1,7 @@
+{
+  "urls": [
+    { "url": "/resume-analyzer/v3/api-docs", "name": "Resume Analyzer API" },
+    { "url": "/resume-generator/v3/api-docs", "name": "Resume Generator API" },
+    { "url": "/analytics-service/v3/api-docs", "name": "Analytics Service API" }
+  ]
+}
