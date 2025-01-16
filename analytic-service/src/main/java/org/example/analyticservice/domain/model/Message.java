@@ -1,105 +1,123 @@
 package org.example.analyticservice.domain.model;
 
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Класс, представляющий модель для сбора аналитики об HTTP-запросах и сохранения в Elasticsearch.
- * Аннотация @Document создает индекс Elasticsearch с именем api-analytics для хранения данных
+ * Класс-модель для хранения аналитики об HTTP-запросах
+ *
+ * <p>Эта сущность отображается на таблицу "analytics-message" в схеме "micro-request-analytic"
+ * каталога "analytics_db".</p>
+ *
+ * <p>Класс Message содержит информацию о методе запроса, URL,
+ * коде ответа, IP-адресе клиента, времени выполнения и временной метке,
+ * указывающей, когда сообщение было создано.</p>
+ *
  */
+@Entity
+@Table(name = "analytics-message", schema = "micro-request-analytic", catalog = "analytics_db")
 @Getter
 @Setter
-@Document(indexName = "api-analytics")
 public class Message {
 
     /**
-     * Уникальный идентификатор сообщения
-     * Сохраняется в Elasticsearch в поле с именем id
+     * Уникальный идентификатор сообщения.
+     * Это поле автоматически генерируется базой данных.
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Метод HTTP-запроса
-     * Сохраняется в Elasticsearch в поле с именем method
+     * Время, в которое запрос был отправлен.
+     * Не может быть пустым.
      */
-    @Field(type = FieldType.Text, name = "method")
+    @Column(nullable = false)
+    private LocalDateTime timestamp;
+
+    /**
+     * Метод HTTP-запроса.
+     * Не может быть пустым.
+     */
+    @Column(nullable = false)
     private String method;
 
     /**
-     * URL HTTP-запроса
-     * Сохраняется в Elasticsearch в поле с именем url
+     * URL HTTP-запроса.
+     * Не может быть пустым.
      */
-    @Field(type = FieldType.Text, name = "url")
+    @Column(nullable = false)
     private String url;
 
     /**
-     * Код ответа
-     * Сохраняется в Elasticsearch в поле с именем code
+     * Код ответа.
+     * Не может быть пустым.
      */
-    @Field(type = FieldType.Text, name = "code")
-    private int code;
+    @Column(nullable = false)
+    private int responseCode;
 
     /**
-     * IP-адрес клиента
-     * Сохраняется в Elasticsearch в поле с именем ip
+     * IP-адрес клиента.
+     * Не может быть пустым.
      */
-    @Field(type = FieldType.Text, name = "ip")
-    private String ip;
+    @Column(nullable = false)
+    private String clientIp;
 
     /**
-     * Время выполнения запроса
-     * Сохраняется в Elasticsearch в поле с именем time
+     * Время выполнения запроса.
+     * Не может быть пустым.
      */
-    @Field(type = FieldType.Text, name = "time")
-    private int time;
-
+    @Column(nullable = false)
+    private int executionTimeMs;
 
     public Message() {}
 
     /**
      * Конструктор с параметрами
+     * @param timestamp время формирования запроса
      * @param method метод запроса
      * @param url URL запроса
-     * @param code код ответа
-     * @param ip ip-адрес клиента
-     * @param time время выполнения запроса
+     * @param responseCode код ответа
+     * @param clientIp ip-адрес клиента
+     * @param executionTimeMs время выполнения запроса
      */
-    public Message(String method, String url, int code, String ip, int time) {
+    public Message(LocalDateTime timestamp, String method, String url, int responseCode, String clientIp, int executionTimeMs) {
+        this.timestamp = timestamp;
         this.method = method;
         this.url = url;
-        this.code = code;
-        this.ip = ip;
-        this.time = time;
+        this.responseCode = responseCode;
+        this.clientIp = clientIp;
+        this.executionTimeMs = executionTimeMs;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
-        return code == message.code && time == message.time && Objects.equals(method, message.method) && Objects.equals(url, message.url) && Objects.equals(ip, message.ip);
+        Message messageP = (Message) o;
+        return responseCode == messageP.responseCode && executionTimeMs == messageP.executionTimeMs && Objects.equals(id, messageP.id) && Objects.equals(timestamp, messageP.timestamp) && Objects.equals(method, messageP.method) && Objects.equals(url, messageP.url) && Objects.equals(clientIp, messageP.clientIp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, url, code, ip, time);
+        return Objects.hash(id, timestamp, method, url, responseCode, clientIp, executionTimeMs);
     }
 
     @Override
     public String toString() {
         return "Message{" +
-                "method='" + method + '\'' +
+                "id=" + id +
+                ", timestamp=" + timestamp +
+                ", method='" + method + '\'' +
                 ", url='" + url + '\'' +
-                ", code=" + code +
-                ", ip='" + ip + '\'' +
-                ", time=" + time +
+                ", responseCode=" + responseCode +
+                ", clientIp='" + clientIp + '\'' +
+                ", executionTimeMs=" + executionTimeMs +
                 '}';
     }
 }

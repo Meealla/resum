@@ -1,24 +1,20 @@
 FROM openjdk:21-jdk-slim
 
-# Set the working directory inside the container
+# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-# Copy necessary files: gradle wrapper and the application source code
+# Копируем необходимые файлы
 COPY gradlew gradlew
 COPY gradle gradle
-COPY ../analytics-message ./analytics-message1
-COPY . .
+COPY ./analytic-service .
 
-## Устанавливаем права на выполнение Gradle Wrapper
-#RUN chmod +x gradlew
-#
-## Собираем приложение с использованием Gradle
-#RUN ./gradlew build -x test --no-daemon
+ADD ../analytics-message /analytics-message1
 
 RUN chmod +x gradlew && ./gradlew build
 
-# Expose the application port
+# Порт приложения
 EXPOSE 8084
 
-# Command to run the application
-CMD ["java", "-jar", "build/libs/analytic-service-0.0.1-SNAPSHOT.jar"]
+# Команды для запуска приложения
+CMD ["java", "-jar", "./analytic-service/build/libs/analytic-service-0.0.1-SNAPSHOT.jar"]
+
