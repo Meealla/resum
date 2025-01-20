@@ -14,9 +14,9 @@ import java.util.Objects;
 public class MessageDTO {
 
     /**
-     * Уникальный идентификатор сообщения
+     * Время, в которое запрос был отправлен
      */
-    private Long id;
+    private String timestamp;
 
     /**
      * Метод HTTP-запроса
@@ -31,57 +31,61 @@ public class MessageDTO {
     /**
      * Код ответа
      */
-    private int code;
+    private int responseCode;
 
     /**
      * IP-адрес клиента
      */
-    private String ip;
+    private String clientIp;
 
     /**
      * Время выполнения запроса
      */
-    private int time;
+    private int executionTimeMs;
+
 
     public MessageDTO() {}
 
     /**
      * Конструктор с параметрами
+     * @param timestamp время формирования запроса
      * @param method метод запроса
      * @param url URL запроса
-     * @param code код ответа
-     * @param ip ip-адрес клиента
-     * @param time время выполнения запроса
+     * @param responseCode код ответа
+     * @param clientIp ip-адрес клиента
+     * @param executionTimeMs время выполнения запроса
      */
-    public MessageDTO(String method, String url, int code, String ip, int time) {
+    public MessageDTO(String timestamp, String method, String url, int responseCode, String clientIp, int executionTimeMs) {
+        this.timestamp = timestamp;
         this.method = method;
         this.url = url;
-        this.code = code;
-        this.ip = ip;
-        this.time = time;
+        this.responseCode = responseCode;
+        this.clientIp = clientIp;
+        this.executionTimeMs = executionTimeMs;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MessageDTO message = (MessageDTO) o;
-        return code == message.code && time == message.time && Objects.equals(method, message.method) && Objects.equals(url, message.url) && Objects.equals(ip, message.ip);
+        MessageDTO that = (MessageDTO) o;
+        return responseCode == that.responseCode && executionTimeMs == that.executionTimeMs && Objects.equals(timestamp, that.timestamp) && Objects.equals(method, that.method) && Objects.equals(url, that.url) && Objects.equals(clientIp, that.clientIp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(method, url, code, ip, time);
+        return Objects.hash(timestamp, method, url, responseCode, clientIp, executionTimeMs);
     }
 
     @Override
     public String toString() {
         return "MessageDTO{" +
-                "method='" + method + '\'' +
+                ", timestamp=" + timestamp +
+                ", method='" + method + '\'' +
                 ", url='" + url + '\'' +
-                ", code=" + code +
-                ", ip='" + ip + '\'' +
-                ", time=" + time +
+                ", responseCode=" + responseCode +
+                ", clientIp='" + clientIp + '\'' +
+                ", executionTimeMs=" + executionTimeMs +
                 '}';
     }
 }
