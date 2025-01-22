@@ -7,17 +7,17 @@ plugins {
     id 'checkstyle'
 }
 
-checkstyle {
-    toolVersion = '10.12.1'
-    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-}
-
-tasks.withType(Checkstyle) {
-    reports {
-        html.required = true
-        xml.required = false
-    }
-}
+//checkstyle {
+//    toolVersion = '10.12.1'
+//    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+//}
+//
+//tasks.withType(Checkstyle) {
+//    reports {
+//        html.required = true
+//        xml.required = false
+//    }
+//}
 
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
