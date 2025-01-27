@@ -63,7 +63,7 @@ public class SocialLink implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SocialLink that = (SocialLink) o;
-        return Objects.equals(link, that.link) && Objects.equals(name, that.name);
+        return link.equals(that.link) && name.equals(that.name);
     }
 
     @Override

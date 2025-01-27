@@ -71,7 +71,7 @@ public class Experience implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Experience that = (Experience) o;
-        return Objects.equals(description, that.description) && Objects.equals(position, that.position) && Objects.equals(from_year, that.from_year) && Objects.equals(to_year, that.to_year) && Objects.equals(name, that.name);
+        return description.equals(that.description) && position.equals(that.position) && from_year.equals(that.from_year) && to_year.equals(that.to_year) && name.equals(that.name);
     }
 
     @Override
