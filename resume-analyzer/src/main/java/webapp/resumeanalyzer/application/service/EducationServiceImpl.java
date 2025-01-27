@@ -91,4 +91,9 @@ public class EducationServiceImpl implements EducationService {
         return Integer.parseInt(education.getFrom_year()) >= Integer.parseInt(
                 education.getTo_year());
     }
+
+    @Override
+    public List<Education> getAllEducations() {
+        return educationRepository.findAll();
+    }
 }

@@ -22,4 +22,6 @@ public interface ExperienceService {
 
     //получение по id
     Experience getExperienceById(String id);
+
+    List<Experience> getAllExperiences();
 }

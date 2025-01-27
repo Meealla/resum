@@ -14,6 +14,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Сущность Resume для хранения данных резюме в базе данных.
@@ -36,7 +38,7 @@ import lombok.ToString;
 public class Resume implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @UuidGenerator
     @Column(unique = true)
     private UUID id;
 
@@ -45,37 +47,46 @@ public class Resume implements Serializable {
     @NotNull
     private PersonalData personalData;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "education_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "resume_id")
     private Set<Education> educations;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "experience_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "resume_id")
     private Set<Experience> experiences;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "socialLink_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "resume_id")
     private Set<SocialLink> socialLinks;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "hobby_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "resume_id")
     private Set<Hobby> hobbies;
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null || getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        Resume resume = (Resume) o;
+//        return id.equals(resume.id);
+//    }
+
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return id.equals(resume.id);
+        return Objects.equals(personalData, resume.personalData) && Objects.equals(educations, resume.educations) && Objects.equals(experiences, resume.experiences) && Objects.equals(socialLinks, resume.socialLinks) && Objects.equals(hobbies, resume.hobbies);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(personalData, educations, experiences, socialLinks, hobbies);
     }
 }

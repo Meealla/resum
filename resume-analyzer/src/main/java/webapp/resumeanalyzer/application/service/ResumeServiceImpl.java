@@ -1,6 +1,7 @@
 package webapp.resumeanalyzer.application.service;
 
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import webapp.resumeanalyzer.domain.service.ResumeService;
  * Сервис CRUD методов сущности Resume.
  */
 @Service
+@Transactional(readOnly = true)
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeRepository resumeRepository;
@@ -71,7 +73,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    @Cacheable(value = "resumes", key = "#id")
+//    @Cacheable(value = "resumes", key = "#id")
     public Resume getResumeById(String id) {
         UUID uuid = generateUuid(id);
         return resumeRepository.findById(uuid).orElseThrow(
@@ -80,5 +82,16 @@ public class ResumeServiceImpl implements ResumeService {
 
     private UUID generateUuid(String id) {
         return UUID.fromString(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        resumeRepository.deleteAll();
+    }
+
+    @Override
+    public List<Resume> getAllResumes() {
+        return resumeRepository.findAll();
     }
 }
