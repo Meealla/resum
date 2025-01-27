@@ -22,4 +22,9 @@ public interface ResumeService {
 
     //получение по id
     Resume getResumeById(String id);
+
+    void deleteAll();
+
+    List<Resume> getAllResumes();
+
 }

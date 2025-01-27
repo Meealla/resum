@@ -22,4 +22,6 @@ public interface PersonalDataService {
 
     //получение по id
     PersonalData getPersonalDataById(String id);
+
+    List<PersonalData> getAllPersonalData();
 }

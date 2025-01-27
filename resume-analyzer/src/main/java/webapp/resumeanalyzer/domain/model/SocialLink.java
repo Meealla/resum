@@ -8,12 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Сущность SocialLink для хранения данных резюме в базе данных.
@@ -29,7 +31,7 @@ import lombok.ToString;
 public class SocialLink implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @UuidGenerator
     @Column(unique = true)
     private UUID id;
 
@@ -37,21 +39,35 @@ public class SocialLink implements Serializable {
 
     private String name;
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null || getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        SocialLink that = (SocialLink) o;
+//        return id.equals(that.id);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return id.hashCode();
+//    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         SocialLink that = (SocialLink) o;
-        return id.equals(that.id);
+        return Objects.equals(link, that.link) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(link, name);
     }
 }
