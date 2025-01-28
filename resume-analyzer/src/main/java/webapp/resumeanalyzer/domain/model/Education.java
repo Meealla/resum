@@ -67,7 +67,7 @@ public class Education implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Education education = (Education) o;
-        return Objects.equals(description, education.description) && Objects.equals(position, education.position) && Objects.equals(from_year, education.from_year) && Objects.equals(to_year, education.to_year) && Objects.equals(name, education.name);
+        return description.equals(education.description) && position.equals(education.position) && from_year.equals(education.from_year) && to_year.equals(education.to_year) && name.equals(education.name);
     }
 
 //    @Override

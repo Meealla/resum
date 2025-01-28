@@ -58,7 +58,7 @@ public class PersonalData implements Serializable {
     private String website;
 
     @Email
-    @JsonProperty("mail")
+//    @JsonProperty("mail")
     private String email;
 
 //    @Override

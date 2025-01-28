@@ -47,19 +47,19 @@ public class Resume implements Serializable {
     @NotNull
     private PersonalData personalData;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_id")
     private Set<Education> educations;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_id")
     private Set<Experience> experiences;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_id")
     private Set<SocialLink> socialLinks;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_id")
     private Set<Hobby> hobbies;
 
@@ -82,7 +82,7 @@ public class Resume implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(personalData, resume.personalData) && Objects.equals(educations, resume.educations) && Objects.equals(experiences, resume.experiences) && Objects.equals(socialLinks, resume.socialLinks) && Objects.equals(hobbies, resume.hobbies);
+        return personalData.equals(resume.personalData) && educations.equals(resume.educations) && experiences.equals(resume.experiences) && socialLinks.equals(resume.socialLinks) && hobbies.equals(resume.hobbies);
     }
 
     @Override

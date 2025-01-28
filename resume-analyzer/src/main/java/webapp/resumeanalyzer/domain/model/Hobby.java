@@ -61,7 +61,7 @@ public class Hobby implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Hobby hobby1 = (Hobby) o;
-        return Objects.equals(hobby, hobby1.hobby);
+        return hobby.equals(hobby1.hobby);
     }
 
     @Override
