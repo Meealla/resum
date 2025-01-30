@@ -34,7 +34,7 @@ import lombok.ToString;
 public class PersonalData implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true)
     private UUID id;
 
@@ -42,6 +42,7 @@ public class PersonalData implements Serializable {
     @NotNull
     @Size(min = 3)
     @JsonProperty("fullName")
+    @Column(name = "full_name")
     private String full_name;
 
     @JsonProperty("adress")

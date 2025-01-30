@@ -36,7 +36,7 @@ import lombok.ToString;
 public class Resume implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true)
     private UUID id;
 

@@ -1,18 +1,21 @@
 package webapp.resumeanalyzer;
 
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,6 +39,19 @@ import webapp.resumeanalyzer.domain.model.PersonalData;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.model.SocialLink;
 import webapp.resumeanalyzer.domain.service.ResumeService;
+import org.springframework.data.domain.Pageable;
+
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasSize;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.util.StringUtils;
 
 /**
  * Тестовый класс для проверки функциональности {@link ResumeTestController}.
@@ -102,7 +121,9 @@ public class TestForResumeController {
      */
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(resumeTestController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(resumeTestController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
     }
 
     /**
@@ -144,5 +165,74 @@ public class TestForResumeController {
     @DisplayName("Проверка что при удалении шаблона по id возвращается статус 204")
     public void testDeleteResume() throws Exception {
         mockMvc.perform(delete(uriTemp + "/{id}", generatedId)).andExpect(status().isNoContent());
+    }
+
+    /**
+     * Тест на проверку, что при поиске по ключевому слову резюме находится
+     *
+     * @throws Exception Исключение, возникающее при выполнении запроса.
+     */
+    @Test
+    @DisplayName("Проверка, что возвращение по ключевому слову резюме работает - статус 200")
+    public void testSearchResume_valid() throws Exception {
+        String query = "test";
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Resume> resumes = List.of(testJson);
+        Page<Resume> page = new PageImpl<>(resumes, pageable, resumes.size());
+        when(resumeService.searchResumes(eq(query), any(Pageable.class))).thenReturn(page);
+        mockMvc.perform(get(uriTemp + "/search")
+                        .param("query", query)
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id", is(generatedId.toString())));
+
+        verify(resumeService).searchResumes(eq(query), any(Pageable.class));
+    }
+
+    /**
+     * Тест на проверку, что запрос пустой и выходит исключение
+     *
+     * @throws Exception Исключение, возникающее при выполнении запроса.
+     */
+    @Test
+    @DisplayName("Проверка, что возвращается ошибка, если запрос пустой - статус 400")
+    public void testSearchResume_NotFound() throws Exception {
+        mockMvc.perform(get(uriTemp + "/search").param("query", " "))
+                .andExpect(status().isBadRequest());
+        verify(resumeService, never()).searchResumes(any(), any());
+
+    }
+
+    /**
+     * Тест на проверку, что запрос превышает максимальную длину
+     *
+     * @throws Exception Исключение, возникающее при выполнении запроса.
+     */
+    @Test
+    @DisplayName("Проверка, что возвращается ошибка, если запрос превышает 255 - статус 400")
+    public void testSearchResume_ToLong() throws Exception {
+        String query = "test".repeat(256);
+        mockMvc.perform(get(uriTemp + "/search").param("query", query))
+                .andExpect(status().isBadRequest());
+        verify(resumeService, never()).searchResumes(any(), any());
+    }
+
+    /**
+     * Тест на проверку, что по запросу не найдено совпадений
+     *
+     * @throws Exception Исключение, возникающее при выполнении запроса.
+     */
+    @Test
+    @DisplayName("Проверка, что возвращается ошибка, если совпадений по запросу не найдено - статус 404")
+    public void testSearchResume_NoResult() throws Exception {
+        String test = "test";
+        Page<Resume> resumes = Page.empty();
+        when(resumeService.searchResumes(eq(test), any(Pageable.class))).thenReturn(resumes);
+
+        mockMvc.perform(get(uriTemp + "/search").param("query", test))
+                .andExpect(status().isNotFound());
+        verify(resumeService).searchResumes(eq(test), any(Pageable.class));
     }
 }

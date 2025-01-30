@@ -1,6 +1,9 @@
 package webapp.resumeanalyzer.domain.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+
 import webapp.resumeanalyzer.domain.model.Resume;
 
 /**
@@ -22,4 +25,7 @@ public interface ResumeService {
 
     //получение по id
     Resume getResumeById(String id);
+
+    // резюме по ключевым словам
+    Page<Resume> searchResumes(String query, Pageable pageable);
 }

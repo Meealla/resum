@@ -7,8 +7,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -101,4 +107,28 @@ public class ResumeTestController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @Operation(summary = "Поиск резюме по ключевым словам",
+            description = "Возвращение списка резюме по определенным полям")
+    @ApiResponse(responseCode = "200", description = "Резюме найдено",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
+    @ApiResponse(responseCode = "404", description = "Резюме не найдено")
+    @ApiResponse(responseCode = "400", description = "Введены некорректные данные")
+    @GetMapping("/search")
+    public ResponseEntity<Page<Resume>> searchResume(
+            @Parameter(description = "Ключевые слова для поиска", required = true)
+            @RequestParam String query,
+    @Parameter(description = "Пагинация", required = false)
+            Pageable pageable){
+        if (query == null || query.trim().isEmpty() || query.length() > 255) {
+            return ResponseEntity.badRequest().build();
+        }
+        Page<Resume> resumes = resumeService.searchResumes(query, pageable);
+        if (resumes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(resumes);
+    }
+
 }
+
