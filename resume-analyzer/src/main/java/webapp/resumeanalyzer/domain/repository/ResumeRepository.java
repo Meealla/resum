@@ -38,30 +38,6 @@ public interface ResumeRepository extends JpaRepository<Resume, UUID> {
             nativeQuery = true)
     Page<Resume> searchResumes(@Param("query") String query, Pageable pageable);
 
-
-//    @Query(value = "SELECT r FROM Resume r " +
-//                   "JOIN r.personalData pd " +
-//                   "WHERE to_tsvector('english', pd.full_name) @@ to_tsquery(:query) " +
-//                   "OR to_tsvector('english', pd.bio) @@ to_tsquery(:query) " +
-//                   "OR to_tsvector('english', pd.position) @@ to_tsquery(:query)",
-//            countQuery = "SELECT COUNT(r) FROM Resume r " +
-//                         "JOIN r.personalData pd " +
-//                         "WHERE to_tsvector('english', pd.full_name) @@ to_tsquery(:query) " +
-//                         "OR to_tsvector('english', pd.bio) @@ to_tsquery(:query) " +
-//                         "OR to_tsvector('english', pd.position) @@ to_tsquery(:query)", nativeQuery = true)
-//    Page<Resume> searchResumes(@Param("query") String query, Pageable pageable);
-
-
-//    @Query(value = "SELECT r FROM Resume r " +
-//                   "JOIN r.personalData pd " + "WHERE " + "   " + "("
-//                   +
-//                   "lower(pd.full_name) LIKE lower(concat('%', :keyword, '%')) OR " +
-//                   "lower(pd.bio) LIKE lower(concat('%', :keyword, '%')) OR " +
-//                   "lower(pd.position) LIKE lower(concat('%', :keyword, '%'))" +
-//                   "   )"
-//    )
-//    Page<Resume> searchResumesByKeywords(@Param("keyword") String keyword, Pageable pageable);
-
 }
 
 

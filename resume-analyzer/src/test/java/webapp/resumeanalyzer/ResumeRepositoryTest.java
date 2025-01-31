@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import webapp.resumeanalyzer.domain.model.PersonalData;
 import webapp.resumeanalyzer.domain.repository.ResumeRepository;
 import webapp.resumeanalyzer.domain.model.Resume;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -25,15 +26,15 @@ public class ResumeRepositoryTest {
     private ResumeRepository resumeRepository;
 
     @Test
-    public void resumeSearchTest(){
+    public void resumeSearchTest() {
         PersonalData personalData1 = new PersonalData();
-        personalData1.setFull_name("John");
-        personalData1.setBio("Developer");
-        personalData1.setPosition("Senior Developer");
+        personalData1.setFull_name("TestName1");
+        personalData1.setBio("TestBio");
+        personalData1.setPosition("TestPosition1");
         PersonalData personalData2 = new PersonalData();
-        personalData2.setFull_name("Tom");
-        personalData2.setBio("Developer");
-        personalData2.setPosition("Junior Developer");
+        personalData2.setFull_name("TestName2");
+        personalData2.setBio("TestBio");
+        personalData2.setPosition("Junior TestPosition2");
 
         Resume resume1 = new Resume();
         resume1.setPersonalData(personalData1);
@@ -45,11 +46,11 @@ public class ResumeRepositoryTest {
         entityManager.flush();
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Resume> result = resumeRepository.searchResumes("developer", pageable);
+        Page<Resume> result = resumeRepository.searchResumes("TestBio", pageable);
 
         assertThat(result.getContent()).hasSize(2);
-        assertThat(result.getContent().get(0).getPersonalData().getFull_name()).isEqualTo("John");
-        assertThat(result.getContent().get(1).getPersonalData().getFull_name()).isEqualTo("Tom");
+        assertThat(result.getContent().get(0).getPersonalData().getFull_name()).isEqualTo("TestName1");
+        assertThat(result.getContent().get(1).getPersonalData().getFull_name()).isEqualTo("TestName2");
 
     }
 

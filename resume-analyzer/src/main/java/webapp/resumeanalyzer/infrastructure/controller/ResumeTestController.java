@@ -112,21 +112,17 @@ public class ResumeTestController {
             description = "Возвращение списка резюме по определенным полям")
     @ApiResponse(responseCode = "200", description = "Резюме найдено",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
-    @ApiResponse(responseCode = "404", description = "Резюме не найдено")
     @ApiResponse(responseCode = "400", description = "Введены некорректные данные")
     @GetMapping("/search")
     public ResponseEntity<Page<Resume>> searchResume(
             @Parameter(description = "Ключевые слова для поиска", required = true)
             @RequestParam String query,
-    @Parameter(description = "Пагинация", required = false)
-            Pageable pageable){
+            @Parameter(description = "Пагинация", required = false)
+            Pageable pageable) {
         if (query == null || query.trim().isEmpty() || query.length() > 255) {
             return ResponseEntity.badRequest().build();
         }
         Page<Resume> resumes = resumeService.searchResumes(query, pageable);
-        if (resumes.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(resumes);
     }
 
