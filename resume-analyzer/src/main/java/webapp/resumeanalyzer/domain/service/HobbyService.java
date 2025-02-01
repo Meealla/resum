@@ -22,4 +22,6 @@ public interface HobbyService {
 
     //получение по id
     Hobby getHobbyById(String id);
+
+    List<Hobby> getAllHobbies();
 }

@@ -81,4 +81,9 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
+
+    @Override
+    public List<PersonalData> getAllPersonalData() {
+        return personalDataRepository.findAll();
+    }
 }

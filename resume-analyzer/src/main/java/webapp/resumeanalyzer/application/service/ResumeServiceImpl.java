@@ -1,16 +1,13 @@
 package webapp.resumeanalyzer.application.service;
 
-import jakarta.transaction.Transactional;
-
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-
+//import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +20,7 @@ import webapp.resumeanalyzer.domain.service.ResumeService;
  * Сервис CRUD методов сущности Resume.
  */
 @Service
+@Transactional(readOnly = true)
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeRepository resumeRepository;
@@ -77,7 +75,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    @Cacheable(value = "resumes", key = "#id")
+//    @Cacheable(value = "resumes", key = "#id")
     public Resume getResumeById(String id) {
         UUID uuid = generateUuid(id);
         return resumeRepository.findById(uuid).orElseThrow(
@@ -95,5 +93,16 @@ public class ResumeServiceImpl implements ResumeService {
 
     private UUID generateUuid(String id) {
         return UUID.fromString(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        resumeRepository.deleteAll();
+    }
+
+    @Override
+    public List<Resume> getAllResumes() {
+        return resumeRepository.findAll();
     }
 }

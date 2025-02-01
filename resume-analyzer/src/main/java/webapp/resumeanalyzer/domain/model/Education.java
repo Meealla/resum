@@ -9,12 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Сущность Education для хранения данных резюме в базе данных.
@@ -30,7 +32,7 @@ import lombok.ToString;
 public class Education implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @UuidGenerator
     @Column(unique = true)
     private UUID id;
 
@@ -46,21 +48,36 @@ public class Education implements Serializable {
 
     private String name;
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null || getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        Education education = (Education) o;
+//        return id.equals(education.id);
+//    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Education education = (Education) o;
-        return id.equals(education.id);
+        return description.equals(education.description) && position.equals(education.position) && from_year.equals(education.from_year) && to_year.equals(education.to_year) && name.equals(education.name);
     }
+
+//    @Override
+//    public int hashCode() {
+//        return id.hashCode();
+//    }
+
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(description, position, from_year, to_year, name);
     }
 }

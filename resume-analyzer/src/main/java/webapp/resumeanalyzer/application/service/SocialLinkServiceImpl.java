@@ -79,4 +79,9 @@ public class SocialLinkServiceImpl implements SocialLinkService {
     private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
+
+    @Override
+    public List<SocialLink> getSocialLinks() {
+        return socialLinkRepository.findAll();
+    }
 }

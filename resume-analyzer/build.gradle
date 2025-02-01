@@ -47,9 +47,19 @@ dependencies {
 //    testImplementation 'com.h2database:h2'
     implementation 'org.springframework.data:spring-data-commons'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.testcontainers:postgresql:1.20.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.3'
+    testImplementation 'com.redis:testcontainers-redis:2.2.2'
+
+
     implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.27'
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.8.1'
+    implementation 'org.flywaydb:flyway-core:11.1.1'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.1.1'
+
+
+
 }
 
 dependencyManagement {

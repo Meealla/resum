@@ -22,4 +22,6 @@ public interface SocialLinkService {
 
     //получение по id
     SocialLink getSocialLink(String id);
+
+    List<SocialLink> getSocialLinks();
 }

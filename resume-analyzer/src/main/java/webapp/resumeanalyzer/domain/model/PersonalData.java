@@ -13,12 +13,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Сущность PersonalData для хранения данных резюме в базе данных.
@@ -34,7 +36,7 @@ import lombok.ToString;
 public class PersonalData implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
     @Column(unique = true)
     private UUID id;
 
@@ -42,7 +44,6 @@ public class PersonalData implements Serializable {
     @NotNull
     @Size(min = 3)
     @JsonProperty("fullName")
-    @Column(name = "full_name")
     private String full_name;
 
     @JsonProperty("adress")
@@ -57,24 +58,40 @@ public class PersonalData implements Serializable {
     private String website;
 
     @Email
-    @JsonProperty("mail")
+//    @JsonProperty("mail")
     private String email;
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null || getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        PersonalData that = (PersonalData) o;
+//        return id.equals(that.id);
+//    }
+
+    //    @Override
+//    public int hashCode() {
+//        return id.hashCode();
+//    }
+
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         PersonalData that = (PersonalData) o;
-        return id.equals(that.id);
+        return full_name.equals(that.full_name) && address.equals(that.address) && bio.equals(that.bio) && position.equals(that.position) && phone.equals(that.phone) && website.equals(that.website) && email.equals(that.email);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+          return full_name.hashCode() + address.hashCode() + bio.hashCode() + position.hashCode() + phone.hashCode() + website.hashCode() + email.hashCode();
     }
+
+
 }

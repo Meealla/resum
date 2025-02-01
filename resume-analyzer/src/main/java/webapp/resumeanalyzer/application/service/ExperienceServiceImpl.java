@@ -90,4 +90,9 @@ public class ExperienceServiceImpl implements ExperienceService {
         return Integer.parseInt(experience.getFrom_year()) >= Integer.parseInt(
                 experience.getTo_year());
     }
+
+    @Override
+    public List<Experience> getAllExperiences() {
+        return experienceRepository.findAll();
+    }
 }

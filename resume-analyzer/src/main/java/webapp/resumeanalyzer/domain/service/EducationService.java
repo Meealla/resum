@@ -22,4 +22,6 @@ public interface EducationService {
 
     //получение по id
     Education getEducationById(String id);
+
+    List<Education> getAllEducations();
 }

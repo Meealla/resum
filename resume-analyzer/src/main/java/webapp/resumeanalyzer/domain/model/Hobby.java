@@ -8,12 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Сущность Hobby для хранения данных резюме в базе данных.
@@ -29,27 +31,41 @@ import lombok.ToString;
 public class Hobby implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @UuidGenerator
     @Column(unique = true)
     private UUID id;
 
     private String hobby;
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null || getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        Hobby hobby = (Hobby) o;
+//        return id.equals(hobby.id);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return id.hashCode();
+//    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Hobby hobby = (Hobby) o;
-        return id.equals(hobby.id);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hobby hobby1 = (Hobby) o;
+        return hobby.equals(hobby1.hobby);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hashCode(hobby);
     }
 }

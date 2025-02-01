@@ -80,4 +80,9 @@ public class HobbyServiceImpl implements HobbyService {
     private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
+
+    @Override
+    public List<Hobby> getAllHobbies() {
+        return hobbyRepository.findAll();
+    }
 }
